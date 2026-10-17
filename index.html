@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SateliteSMP - Servidor Semi-Anárquico</title>
+    <!-- Favicon con la imagen del logo -->
+    <link rel="icon" type="image/jpeg" href="Gemini_Generated_Image_h149q1h149q1h149_2.jpg">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0a0d14',
+                            card: '#121721',
+                            border: '#232b3b',
+                            blue: '#0070f3',
+                            cyan: '#00d2ff',
+                            purple: '#7928ca'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0d14;
+            color: #f0f6fc;
+            overflow-x: hidden;
+        }
+        .glow-effect {
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.2);
+        }
+        .glow-effect:hover {
+            box-shadow: 0 0 35px rgba(0, 210, 255, 0.4);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #00d2ff 0%, #0070f3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(18, 23, 33, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(35, 43, 59, 0.8);
+        }
+
+        /* ANIMACIÓN DE SATÉLITE ORBITANDO */
+        @keyframes orbitSatellite {
+            0% {
+                transform: rotate(0deg) translateX(140px) rotate(0deg) scale(0.9);
+            }
+            50% {
+                transform: rotate(180deg) translateX(140px) rotate(-180deg) scale(1.15);
+            }
+            100% {
+                transform: rotate(360deg) translateX(140px) rotate(-360deg) scale(0.9);
+            }
+        }
+        .satellite-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            margin-top: -12px;
+            margin-left: -12px;
+            animation: orbitSatellite 14s linear infinite;
+        }
+        @keyframes floatEffect {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating {
+            animation: floatEffect 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-40 glass-panel border-b border-brand-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo con la imagen cargada -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <img src="Gemini_Generated_Image_h149q1h149q1h149_2.jpg" 
+                     alt="SateliteSMP Logo" 
+                     class="w-12 h-12 rounded-xl object-cover border border-brand-cyan/40 group-hover:scale-105 transition-transform duration-300 shadow-md shadow-brand-cyan/20"
+                     onerror="this.src='https://placehold.co/100x100/121721/00d2ff?text=SATELITE'">
+                <span class="font-extrabold text-2xl tracking-wider text-white">SATELITE<span class="text-brand-cyan">SMP</span></span>
+            </a>
+
+            <!-- Menu links -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
+                <a href="#hero" class="hover:text-brand-cyan transition-colors">Inicio</a>
+                <a href="#store" class="hover:text-brand-cyan transition-colors">Tienda</a>
+                <a href="#info" class="hover:text-brand-cyan transition-colors">Métodos de Pago</a>
+                <a href="https://discord.gg/pQSyhjJUW" target="_blank" class="hover:text-brand-cyan transition-colors flex items-center space-x-1 text-[#5865F2]">
+                    <i class="fab fa-discord text-lg"></i>
+                    <span>Discord</span>
+                </a>
+            </div>
+
+            <!-- Cart button -->
+            <button onclick="toggleCartModal()" class="relative bg-brand-blue/20 hover:bg-brand-blue/30 text-brand-cyan border border-brand-blue/40 px-4 py-2.5 rounded-xl font-bold flex items-center space-x-2 transition-all">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="hidden sm:inline">Carrito</span>
+                <span id="cart-count" class="bg-brand-cyan text-brand-dark rounded-full w-6 h-6 flex items-center justify-center text-xs font-black ml-1">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION CON SATÉLITE EN MOVIMIENTO -->
+    <section id="hero" class="relative py-16 md:py-24 overflow-hidden border-b border-brand-border/50">
+        <!-- Fondos estelares -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,112,243,0.18)_0,transparent_75%)]"></div>
+        
+        <div class="max-w-6xl mx-auto px-4 text-center relative z-10">
+            
+            <!-- LOGO CENTRAL CON ANIMACIÓN DE ORBITA -->
+            <div class="mb-10 flex justify-center">
+                <div class="relative w-56 h-56 sm:w-64 sm:h-64 flex items-center justify-center">
+                    <!-- Satélite Orbitando -->
+                    <div class="satellite-orbit">
+                        <div class="bg-brand-cyan text-brand-dark p-2 rounded-full shadow-lg shadow-brand-cyan/80 flex items-center justify-center border border-white">
+                            <i class="fas fa-satellite text-sm"></i>
+                        </div>
+                    </div>
+
+                    <!-- Logo Flotante -->
+                    <div class="relative group floating">
+                        <div class="absolute -inset-1.5 bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple rounded-2xl blur opacity-50 group-hover:opacity-85 transition duration-500"></div>
+                        <img src="Gemini_Generated_Image_h149q1h149q1h149_2.jpg" 
+                             alt="SateliteSMP Logo Animado" 
+                             class="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl object-cover shadow-2xl border-2 border-brand-cyan/50"
+                             onerror="this.src='https://placehold.co/300x300/121721/00d2ff?text=SATELITE+SMP'">
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl font-black mb-4 tracking-tight">
+                BIENVENIDO A <span class="gradient-text">SATELITESMP</span>
+            </h1>
+            <p class="text-gray-300 text-lg sm:text-xl max-w-2xl mx-auto mb-8 font-medium">
+                Servidor de Minecraft <span class="text-white font-semibold">Semi-Anárquico</span> • Versiones <span class="text-brand-cyan font-bold">1.16.5 - 1.20+</span>
+            </p>
+
+            <!-- IP & Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
+                <div class="glass-panel rounded-xl p-2.5 px-5 flex items-center justify-between w-full sm:w-auto flex-1 border border-brand-border">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="server-ip" class="font-mono font-bold text-white tracking-wide text-sm sm:text-base">Satelite.diavlohosting.com</span>
+                    </div>
+                    <button onclick="copyIP()" class="ml-4 bg-brand-blue hover:bg-blue-600 text-white p-2 rounded-lg transition-colors text-xs font-semibold flex items-center space-x-1">
+                        <i class="far fa-copy"></i>
+                        <span id="copy-btn-text" class="hidden sm:inline">Copiar</span>
+                    </button>
+                </div>
+                
+                <a href="https://discord.gg/pQSyhjJUW" target="_blank" class="w-full sm:w-auto bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg shadow-[#5865F2]/20">
+                    <i class="fab fa-discord text-xl"></i>
+                    <span>Abrir Ticket en Discord</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STORE SECTION -->
+    <section id="store" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-3">TIENDA <span class="gradient-text">OFICIAL</span></h2>
+            <p class="text-gray-400">Adquiere tus rangos, picos OP y llaves con pago directo por PayPal o Pago Móvil por Discord</p>
+        </div>
+
+        <!-- Categories Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+            <button onclick="switchTab('rangos-perm')" id="tab-rangos-perm" class="category-tab active-tab bg-brand-blue text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md">
+                <i class="fas fa-crown mr-2"></i>Rangos Permanentes
+            </button>
+            <button onclick="switchTab('rangos-temp')" id="tab-rangos-temp" class="category-tab bg-brand-card hover:bg-brand-border text-gray-300 px-5 py-2.5 rounded-xl font-bold text-sm transition-all border border-brand-border">
+                <i class="fas fa-clock mr-2"></i>Rangos Temporales
+            </button>
+            <button onclick="switchTab('herramientas')" id="tab-herramientas" class="category-tab bg-brand-card hover:bg-brand-border text-gray-300 px-5 py-2.5 rounded-xl font-bold text-sm transition-all border border-brand-border">
+                <i class="fas fa-hammer mr-2"></i>Picos & Herramientas
+            </button>
+            <button onclick="switchTab('llaves-servicios')" id="tab-llaves-servicios" class="category-tab bg-brand-card hover:bg-brand-border text-gray-300 px-5 py-2.5 rounded-xl font-bold text-sm transition-all border border-brand-border">
+                <i class="fas fa-key mr-2"></i>Llaves & Servicios
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Injection -->
+        </div>
+    </section>
+
+    <!-- INFO MÉTODOS DE PAGO -->
+    <section id="info" class="py-12 bg-brand-card/60 border-y border-brand-border">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="glass-panel p-6 rounded-2xl border border-brand-border">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fab fa-paypal text-3xl text-[#003087]"></i>
+                    <h3 class="text-xl font-bold text-white">Pago Automatizado / Directo con PayPal</h3>
+                </div>
+                <p class="text-sm text-gray-300 mb-4 leading-relaxed">
+                    Puedes realizar tus compras enviando el monto exacto en USD a nuestro correo oficial de PayPal:
+                </p>
+                <div class="bg-brand-dark p-3 rounded-xl border border-brand-border flex items-center justify-between mb-4">
+                    <span class="font-mono text-brand-cyan font-bold text-sm">airiarte333@gmail.com</span>
+                    <button onclick="copyPaypalEmail()" class="text-xs bg-brand-blue hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg transition-colors">
+                        Copiar Correo
+                    </button>
+                </div>
+                <p class="text-xs text-gray-400">
+                    * Recuerda colocar tu usuario de Minecraft en la nota del pago de PayPal y generar tu ticket de compra en el carrito para entregártelo de inmediato.
+                </p>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border border-brand-border">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-mobile-alt text-3xl text-emerald-400"></i>
+                    <h3 class="text-xl font-bold text-white">Pago Móvil y Otros Métodos por Discord</h3>
+                </div>
+                <p class="text-sm text-gray-300 mb-4 leading-relaxed">
+                    Si eres de Venezuela o deseas pagar con <strong>Pago Móvil</strong>, Zelle o transferencias locales, solicita los datos bancarios abriendo un ticket en nuestro Discord.
+                </p>
+                <a href="https://discord.gg/pQSyhjJUW" target="_blank" class="inline-flex items-center space-x-2 bg-[#5865F2] hover:bg-[#4752C4] text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-md">
+                    <i class="fab fa-discord"></i>
+                    <span>Ir a Discord para Pago Móvil</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-brand-border bg-brand-card/80 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:items-center">
+            <div class="flex items-center justify-center sm:justify-start space-x-3 mb-4 sm:mb-0">
+                <img src="Gemini_Generated_Image_h149q1h149q1h149_2.jpg" class="w-8 h-8 rounded-lg object-cover" alt="Logo Footer" onerror="this.src='https://placehold.co/50x50/121721/00d2ff?text=S'">
+                <span class="font-bold text-lg">SateliteSMP</span>
+            </div>
+            <p class="text-xs text-gray-500">
+                &copy; 2026 SateliteSMP. No estamos afiliados a Mojang Studios.
+            </p>
+        </div>
+    </footer>
+
+    <!-- CART MODAL & TICKET GENERATOR -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-card border border-brand-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center pb-4 border-b border-brand-border">
+                <h3 class="text-xl font-bold flex items-center">
+                    <i class="fas fa-shopping-basket text-brand-cyan mr-2"></i>
+                    Carrito de Compras
+                </h3>
+                <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Normal Checkout View -->
+            <div id="cart-checkout-view" class="flex-1 flex flex-col justify-between overflow-hidden">
+                <div id="cart-items" class="py-4 overflow-y-auto space-y-3 flex-1">
+                    <!-- Cart items -->
+                </div>
+
+                <div class="pt-4 border-t border-brand-border space-y-3">
+                    <div class="flex justify-between items-center text-lg font-bold">
+                        <span>Total:</span>
+                        <span id="cart-total" class="text-brand-cyan">$0.00</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Tu Usuario de Minecraft *</label>
+                        <input type="text" id="minecraft-username" placeholder="Ejemplo: TuNick_MC" class="w-full bg-brand-dark border border-brand-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Selecciona Método de Pago *</label>
+                        <select id="payment-method" onchange="handlePaymentMethodChange()" class="w-full bg-brand-dark border border-brand-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-cyan">
+                            <option value="PayPal">PayPal (airiarte333@gmail.com)</option>
+                            <option value="Pago Móvil">Pago Móvil (Atención en Discord)</option>
+                        </select>
+                    </div>
+
+                    <div id="paypal-info-box" class="bg-brand-dark/80 p-3 rounded-lg border border-brand-blue/40 text-xs text-gray-300">
+                        <span class="text-brand-cyan font-bold block mb-1">Pago Directo por PayPal:</span>
+                        Envía el total a <strong>airiarte333@gmail.com</strong> colocando tu Nickname en la nota del pago. Luego presiona el botón para generar tu código de confirmación.
+                    </div>
+
+                    <button onclick="generateVerificationTicket()" class="w-full bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-cyan-400 hover:to-blue-600 text-brand-dark font-extrabold py-3 rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Generar Código de Verificación / Ticket</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticket Generated View (Receipt) -->
+            <div id="ticket-success-view" class="hidden py-4 space-y-4">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-2 text-2xl">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white">¡Ticket de Compra Generado!</h4>
+                    <p class="text-xs text-gray-400">Guarda este código para entregártelo en Discord</p>
+                </div>
+
+                <div class="bg-brand-dark p-4 rounded-xl border border-brand-cyan/40 space-y-2">
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Código Ticket:</span>
+                        <span id="ticket-code-display" class="font-mono font-bold text-brand-cyan">SAT-0000-2026</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Jugador:</span>
+                        <span id="ticket-user-display" class="font-bold text-white">-</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Productos:</span>
+                        <span id="ticket-items-display" class="font-semibold text-white truncate max-w-[200px]">-</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Total:</span>
+                        <span id="ticket-total-display" class="font-extrabold text-emerald-400">$0.00</span>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-300 leading-relaxed bg-brand-blue/10 p-3 rounded-lg border border-brand-blue/30">
+                    📌 <strong>Siguiente paso:</strong> Copia este código y abre un <strong>Ticket en nuestro Discord</strong>. Un administrador te activará el rango o paquete de inmediato.
+                </p>
+
+                <div class="flex flex-col gap-2">
+                    <button onclick="copyTicketAndOpenDiscord()" class="w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center space-x-2">
+                        <i class="fab fa-discord text-lg"></i>
+                        <span>Copiar Código y Abrir Discord</span>
+                    </button>
+                    <button onclick="resetCartAndClose()" class="w-full bg-brand-dark hover:bg-brand-border text-gray-400 py-2 rounded-xl text-xs font-semibold">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-brand-cyan text-brand-dark px-4 py-3 rounded-xl font-bold shadow-2xl transition-all transform translate-y-20 opacity-0 z-50 flex items-center space-x-2">
+        <i class="fas fa-info-circle"></i>
+        <span id="toast-message">Notificación</span>
+    </div>
+
+    <script>
+        const productsData = {
+            'rangos-perm': [
+                { id: 'rp1', name: 'Rango Xulor', price: 3.00, tag: 'Permanente', desc: 'Kit Xulor, prefijo exclusivo y comandos de conveniencia.' },
+                { id: 'rp2', name: 'Rango Cosmos', price: 5.00, tag: 'Permanente', desc: 'Acceso a /fly en protecciones y kit semanal mejorado.' },
+                { id: 'rp3', name: 'Rango Nebulosa', price: 8.00, tag: 'Permanente', desc: 'Multiplicador de monedas 1.5x, kits VIP completos.' },
+                { id: 'rp4', name: 'Rango Galaxis', price: 10.00, tag: 'Permanente', desc: 'Hogar adicional, /enderchest y kit Galaxis exclusivo.' },
+                { id: 'rp5', name: 'Rango Saturno', price: 15.00, tag: 'Permanente', desc: 'Acceso prioritario a eventos y kit épico ilimitado.' },
+                { id: 'rp6', name: 'Rango Satelite', price: 21.00, tag: 'Permanente supremo', desc: 'Máximo nivel de beneficios, chat de color y comandos VIP.' }
+            ],
+            'rangos-temp': [
+                { id: 'rt1', name: 'Rango Xulor (30 días)', price: 1.50, tag: 'Temporal', desc: 'Disfruta del Rango Xulor por un mes completo.' },
+                { id: 'rt2', name: 'Rango Cosmos (30 días)', price: 2.50, tag: 'Temporal', desc: 'Pase temporal Cosmos con acceso a /fly.' },
+                { id: 'rt3', name: 'Rango Nebulosa (30 días)', price: 4.00, tag: 'Temporal', desc: 'Beneficios Nebulosa por 30 días.' },
+                { id: 'rt4', name: 'Rango Galaxis (30 días)', price: 5.00, tag: 'Temporal', desc: 'Kit e inmunidades temporales Galaxis.' },
+                { id: 'rt5', name: 'Rango Saturno (30 días)', price: 7.50, tag: 'Temporal', desc: 'Ventajas avanzadas Saturno por 1 mes.' },
+                { id: 'rt6', name: 'Rango Satelite (30 días)', price: 11.00, tag: 'Temporal supremo', desc: 'Disfruta del rango máximo durante 30 días.' }
+            ],
+            'herramientas': [
+                { id: 'h1', name: 'Pico 5x5 OP', price: 10.00, banner: '¡50% Descuento próx. temporada!', desc: 'Pico minador de área 5x5 indestructible.' },
+                { id: 'h2', name: 'Pico OP God', price: 12.00, desc: 'Eficiencia 100, Fortuna 100, Irrompible 100 y Reparación.' },
+                { id: 'h3', name: 'Pico 3x3 Lev 20', price: 8.00, desc: 'Pico 3x3 avanzado con Nivel de minería 20.' },
+                { id: 'h4', name: 'Hacha Sell x2', price: 7.00, desc: 'Multiplica tus ganancias al vender madera automáticamente.' }
+            ],
+            'llaves-servicios': [
+                { id: 'ls1', name: 'Llave Satelite', price: 1.50, desc: 'Abre la caja suprema Satelite para recompensas legendarias.' },
+                { id: 'ls2', name: 'Llave Saturno', price: 0.50, desc: 'Llave de caja Saturno con grandes recursos y items.' },
+                { id: 'ls3', name: 'Servicio Unban', price: 15.00, desc: 'Desbaneo total de tu cuenta en el servidor SateliteSMP.' }
+            ]
+        };
+
+        let cart = [];
+        let currentTab = 'rangos-perm';
+        let generatedTicketCode = '';
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.category-tab').forEach(btn => {
+                btn.classList.remove('bg-brand-blue', 'text-white');
+                btn.classList.add('bg-brand-card', 'text-gray-300');
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('bg-brand-blue', 'text-white');
+            activeBtn.classList.remove('bg-brand-card', 'text-gray-300');
+            
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            
+            const list = productsData[currentTab] || [];
+            list.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl p-5 flex flex-col justify-between hover:border-brand-cyan/50 transition-all duration-300 glow-effect relative overflow-hidden";
+                
+                let bannerHTML = p.banner ? `<div class="bg-gradient-to-r from-amber-500 to-red-500 text-white font-extrabold text-xs px-3 py-1 rounded-full mb-3 inline-block self-start shadow-md">${p.banner}</div>` : '';
+                let tagHTML = p.tag ? `<span class="bg-brand-blue/30 text-brand-cyan text-xs font-bold px-2.5 py-1 rounded-lg border border-brand-blue/50">${p.tag}</span>` : '';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-extrabold text-lg text-white">${p.name}</h3>
+                            ${tagHTML}
+                        </div>
+                        ${bannerHTML}
+                        <p class="text-gray-400 text-xs mb-6 leading-relaxed">${p.desc}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-brand-border/50">
+                        <span class="text-2xl font-black text-white">$${p.price.toFixed(2)}</span>
+                        <button onclick="addToCart('${p.id}')" class="bg-brand-blue hover:bg-cyan-500 hover:text-brand-dark text-white font-bold px-4 py-2 rounded-xl transition-all text-sm flex items-center space-x-1">
+                            <i class="fas fa-cart-plus"></i>
+                            <span>Añadir</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addToCart(productId) {
+            let found = null;
+            Object.values(productsData).forEach(cat => {
+                const item = cat.find(p => p.id === productId);
+                if (item) found = item;
+            });
+
+            if (found) {
+                cart.push(found);
+                updateCartUI();
+                showToast(`¡${found.name} agregado al carrito!`);
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+
+            let total = 0;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p class="text-center text-gray-500 py-6 text-sm">Tu carrito está vacío</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    const itemRow = document.createElement('div');
+                    itemRow.className = "flex justify-between items-center bg-brand-dark p-3 rounded-xl border border-brand-border";
+                    itemRow.innerHTML = `
+                        <div>
+                            <div class="font-bold text-sm text-white">${item.name}</div>
+                            <div class="text-xs text-brand-cyan">$${item.price.toFixed(2)}</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300 p-1.5">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    `;
+                    cartItemsContainer.appendChild(itemRow);
+                });
+            }
+            document.getElementById('cart-total').innerText = `$${total.toFixed(2)}`;
+        }
+
+        function handlePaymentMethodChange() {
+            const method = document.getElementById('payment-method').value;
+            const paypalBox = document.getElementById('paypal-info-box');
+            if (method === 'PayPal') {
+                paypalBox.classList.remove('hidden');
+            } else {
+                paypalBox.classList.add('hidden');
+            }
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function generateVerificationTicket() {
+            const username = document.getElementById('minecraft-username').value.trim();
+            if (!username) {
+                showToast('Ingresa tu usuario de Minecraft');
+                return;
+            }
+            if (cart.length === 0) {
+                showToast('Tu carrito está vacío');
+                return;
+            }
+
+            const randomCode = 'SAT-' + Math.floor(1000 + Math.random() * 9000) + '-2026';
+            generatedTicketCode = randomCode;
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const itemsList = cart.map(i => i.name).join(', ');
+
+            document.getElementById('ticket-code-display').innerText = randomCode;
+            document.getElementById('ticket-user-display').innerText = username;
+            document.getElementById('ticket-items-display').innerText = itemsList;
+            document.getElementById('ticket-total-display').innerText = `$${total.toFixed(2)} USD`;
+
+            document.getElementById('cart-checkout-view').classList.add('hidden');
+            document.getElementById('ticket-success-view').classList.remove('hidden');
+        }
+
+        function copyTicketAndOpenDiscord() {
+            const username = document.getElementById('minecraft-username').value.trim();
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const itemsList = cart.map(i => i.name).join(', ');
+            const method = document.getElementById('payment-method').value;
+
+            const fullText = `[TICKET SATELITESMP]\nCódigo: ${generatedTicketCode}\nUsuario MC: ${username}\nMétodo: ${method}\nProductos: ${itemsList}\nTotal: $${total.toFixed(2)} USD`;
+
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = fullText;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            showToast('¡Código copiado! Abriendo Discord...');
+            setTimeout(() => {
+                window.open('https://discord.gg/pQSyhjJUW', '_blank');
+            }, 1000);
+        }
+
+        function resetCartAndClose() {
+            cart = [];
+            updateCartUI();
+            document.getElementById('cart-checkout-view').classList.remove('hidden');
+            document.getElementById('ticket-success-view').classList.add('hidden');
+            toggleCartModal();
+        }
+
+        function copyIP() {
+            const ip = document.getElementById('server-ip').innerText;
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = ip;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            const btnText = document.getElementById('copy-btn-text');
+            btnText.innerText = '¡Copiado!';
+            showToast('¡IP copiada al portapapeles!');
+            setTimeout(() => { btnText.innerText = 'Copiar'; }, 2000);
+        }
+
+        function copyPaypalEmail() {
+            const email = 'airiarte333@gmail.com';
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = email;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast('¡Correo de PayPal copiado!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            renderProducts();
+        };
+    </script>
+</body>
+</html>
